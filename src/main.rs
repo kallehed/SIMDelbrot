@@ -7,29 +7,32 @@ struct Pos {
     x: F,
     y: F,
 }
-const HEIGHT: i64 = 70;
-const WIDTH: i64 = 152;
+const HEIGHT: i64 = 72;
+const WIDTH: i64 = 184;
 
-// WIDTH has to be divisible by 4
+// WIDTH has to be divisible by 4, STATIC ASSERT
 const _: [(); 0 - (WIDTH % 4 != 0) as usize] = [];
 
 fn main() {
-    // let goto = Pos{x: 0.42884,y: -0.231345};
-    let goto = Pos {
-        x: -1.629170093905343,
-        y: -0.0203968,
-    };
+    // let goto = Pos {
+    //     x: 0.42884,
+    //     y: -0.231345,
+    // };
+    // let goto = Pos {
+    //     x: -1.629170093905343,
+    //     y: -0.0203968,
+    // };
+    let goto = Pos{x: -0.761574, y:-0.0847596};
 
     let palette = br##"`.-':_,^"=;><+!r~c*/\z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@"##;
 
-    // let goto = Pos{x: -0.761574, y:-0.0847596};
     let mut out = std::io::stdout().lock();
     let mut print_buffer = [b'\n'; (WIDTH as usize + 1) * HEIGHT as usize];
 
     // 78
     for zoom in 1.. {
         let size = 10.0 * (1.03 as F).powf(-zoom as F);
-        println!("size: {}", size);
+        // println!("size: {}", size);
 
         let mut most_bounces = 0;
         for y in 0..HEIGHT {
@@ -62,6 +65,7 @@ fn main() {
     }
 }
 
+/// OLD UNSIMD CODE
 // fn in_mandelbrot_set(c: Pos) -> i32 {
 //     let mut z = Pos { x: 0.0, y: 0.0 };
 //     for bounce in 1..500 {
@@ -95,7 +99,7 @@ unsafe fn in_mandelbrot_set_4(cs: [Pos; 4]) -> [i32; 4] {
     let mut bounces_to_leave = [0, 0, 0, 0];
     let mut left = 0;
 
-    for bounce in 1..300 {
+    for bounce in 1..350 {
         let zx_abs = _mm256_mul_pd(zx, zx);
         let zy_abs = _mm256_mul_pd(zy, zy);
         let new_zx = _mm256_add_pd(_mm256_sub_pd(zx_abs, zy_abs), cx);
